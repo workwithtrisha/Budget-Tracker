@@ -4,14 +4,33 @@ import TransactionList from './components/TransactionList';
 import TransactionForm from './components/TransactionForm';
 import BudgetSettings from './components/BudgetSettings';
 import DebtList from './components/DebtList';
+import Login from './components/Login';
+import { auth } from './lib/firebase';
+import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { Plus, LayoutDashboard, Settings, Sun, Moon, CreditCard } from 'lucide-react';
 import useBudgetStore from './store/useBudgetStore';
 
 function App() {
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentView, setCurrentView] = useState('dashboard'); // 'dashboard' | 'settings'
   const [theme, setTheme] = useState('light');
+  const { initializeSync } = useBudgetStore();
   
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+      setLoading(false);
+      
+      if (currentUser) {
+        initializeSync(currentUser.uid);
+      }
+    });
+
+    return () => unsubscribe();
+  }, [initializeSync]);
+
   useEffect(() => {
     if (theme === 'light') {
       document.body.classList.add('light-mode');
@@ -19,6 +38,14 @@ function App() {
       document.body.classList.remove('light-mode');
     }
   }, [theme]);
+
+  if (loading) {
+    return <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>Loading...</div>;
+  }
+
+  if (!user) {
+    return <Login />;
+  }
 
   return (
     <div className="app-container">
@@ -63,6 +90,14 @@ function App() {
 
           <button className="btn btn-primary" onClick={() => setIsModalOpen(true)}>
             <Plus size={20} /> Add Transaction
+          </button>
+
+          <button 
+            onClick={() => signOut(auth)}
+            className="btn" 
+            style={{ background: 'rgba(239, 68, 68, 0.2)', color: '#f87171', border: '1px solid rgba(239, 68, 68, 0.3)' }}
+          >
+            Sign Out
           </button>
         </div>
       </header>
