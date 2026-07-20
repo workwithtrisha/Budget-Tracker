@@ -153,12 +153,19 @@ const useBudgetStore = create(
           };
         }),
 
-        addTransaction: (transaction) => setAndSync((state) => ({
-          transactions: [
-            { ...transaction, id: crypto.randomUUID(), date: new Date().toISOString() },
-            ...state.transactions
-          ]
-        })),
+        addTransaction: (transaction) => setAndSync((state) => {
+          let txDate = new Date().toISOString();
+          if (transaction.date) {
+            const d = new Date(transaction.date);
+            if (!isNaN(d)) txDate = d.toISOString();
+          }
+          return {
+            transactions: [
+              { ...transaction, id: crypto.randomUUID(), date: txDate },
+              ...state.transactions
+            ]
+          };
+        }),
 
         deleteTransaction: (id) => setAndSync((state) => ({
           transactions: state.transactions.filter(t => t.id !== id)

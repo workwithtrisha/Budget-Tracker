@@ -18,6 +18,9 @@ function App() {
   const [theme, setTheme] = useState('light');
   const { initializeSync } = useBudgetStore();
   
+  const currentDate = new Date();
+  const currentMonth = currentDate.toLocaleString('default', { month: 'long', year: 'numeric' });
+  
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
@@ -51,7 +54,7 @@ function App() {
     <div className="app-container">
       <header>
         <div>
-          <h1 className="header-title">Monthly Budget Dashboard</h1>
+          <h1 className="header-title">Monthly Budget Dashboard - {currentMonth}</h1>
           <p>Track your income, expenses, and savings seamlessly.</p>
         </div>
         <div className="header-actions" style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
