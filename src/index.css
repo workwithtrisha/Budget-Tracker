@@ -197,12 +197,14 @@ th {
   font-weight: 500;
   font-size: 0.875rem;
   border-bottom: 1px solid var(--border);
+  white-space: nowrap;
 }
 
 td {
   padding: 1rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   font-size: 0.95rem;
+  white-space: nowrap;
 }
 
 tr:last-child td {
@@ -341,19 +343,42 @@ tr:hover td {
 /* Mobile Responsiveness */
 @media (max-width: 768px) {
   .app-container {
-    padding: 1rem;
+    padding: 1rem 0.5rem;
   }
   
   header {
     flex-direction: column;
     align-items: flex-start;
     gap: 1rem;
+    margin-bottom: 1.5rem;
   }
   
   .header-actions {
     width: 100%;
     justify-content: flex-start;
     flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .header-actions .glass-panel {
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .header-actions .btn {
+    flex: 1;
+    min-width: 110px;
+    padding: 0.6rem 0.5rem;
+    font-size: 0.85rem;
+  }
+
+  .header-title {
+    font-size: 1.35rem;
+  }
+
+  .btn {
+    white-space: nowrap;
   }
 
   .dashboard-grid, .dashboard-grid-2 {
